@@ -1,4 +1,6 @@
 import flet as ft
+import requests
+
 
 show_text = """Ми вже давно займаємось справою електронних приладів, і ще з 2016 року зробили багато продаж. Ми розташовуємось у Вінницькій області та маємо хорошу логістику, що дозволяє швидко і якісно доставляти наші товари по всій Україні.
 
@@ -73,7 +75,7 @@ def main(page: ft.Page):
             ft.Column(
                 controls=[
                     ft.Text("Більше про нас", size=36, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-                    ft.Text(value=show_text, size=10, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+                    ft.Text(value=show_text, size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 expand=True
@@ -101,13 +103,22 @@ def main(page: ft.Page):
 
         # Обробник кнопки підтвердження
         def on_submit(e):
-            print("Ім'я:", name_field.value)
-            print("Фамілія:", surname_field.value)
-            print("Email:", email_field.value)
-            print("Телефон:", phone_field.value)
-            # Тут можеш додати логіку валідації, відправки на сервер і т.д.
+            data = {
+                "name": name_field.value,
+                "surname": surname_field.value,
+                "email": email_field.value,
+                "phone": phone_field.value
+            }
 
-            show_success_message("Успішне підтвердження!")
+            try:
+                response = requests.post("http://127.0.0.1:8000/register", json=data)
+                if response.status_code == 200:
+                    show_success_message("Успішне підтвердження!")
+                else:
+                    show_success_message("Сталася помилка при відправці!")
+            except Exception as err:
+                show_success_message("Не вдалося з'єднатись із сервером.")
+                print("Помилка:", err)
 
         # Очищаємо контент
         content.controls.clear()
