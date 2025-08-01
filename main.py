@@ -25,9 +25,7 @@ def main(page: ft.Page):
                 ft.Text("PowerBankDzhur", size=40, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
                 ft.Text("Якісні павербанки для ваших цілей", size=24, italic=True, color="gray", text_align=ft.TextAlign.CENTER),
                 ft.Divider(height=20, color="transparent"),
-                ft.Row([
-                    ft.TextField(value="0", width=150, height=60, text_align=ft.TextAlign.CENTER),
-                ], alignment=ft.MainAxisAlignment.CENTER),
+
             ], alignment=ft.MainAxisAlignment.START, horizontal_alignment=ft.CrossAxisAlignment.CENTER, expand=True, spacing=15)
         )
         page.update()
@@ -38,9 +36,32 @@ def main(page: ft.Page):
             ft.Column(
                 controls=[
                     ft.Text("Більше про нас", size=36, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-                    ft.Text(value=show_text, size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+                    ft.Text(value=show_text, size=10, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                expand=True
+            )
+        )
+        page.update()
+
+    def account():
+        content.controls.clear()
+        content.controls.append(
+            ft.Column(
+                [
+                    ft.Icon(ft.Icons.ACCOUNT_CIRCLE, size=100),  # Іконка зверху
+                    ft.Row(
+                        [
+                            ft.ElevatedButton("Авторизуватись", width=150),
+                            ft.ElevatedButton("Зареєструватись", width=150),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        spacing=20
+                    )
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=30,
                 expand=True
             )
         )
@@ -51,6 +72,7 @@ def main(page: ft.Page):
         [
             ft.ElevatedButton("Головна", on_click=lambda e: show_home()),
             ft.ElevatedButton("Про нас", on_click=lambda e: show_about()),
+            ft.ElevatedButton("Ввійти в аккаунт", on_click=lambda e: account()),
         ],
         alignment=ft.MainAxisAlignment.CENTER,
         spacing=10
@@ -63,5 +85,6 @@ def main(page: ft.Page):
 
     # Показуємо домашню сторінку спочатку
     show_home()
+
 
 ft.app(target=main, view=ft.WEB_BROWSER, port=8550, host="0.0.0.0")
