@@ -14,6 +14,7 @@ show_text = """Ми вже давно займаємось справою еле
 
 Запрошуємо вас ознайомитися з нашим каталогом і обрати свій ідеальний павербанк уже сьогодні!"""
 
+
 def main(page: ft.Page):
     page.title = "PowerDzhur"
     page.theme_mode = 'dark'
@@ -21,12 +22,48 @@ def main(page: ft.Page):
     def show_home():
         content.controls.clear()
         content.controls.append(
-            ft.Column([
-                ft.Text("PowerBankDzhur", size=40, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-                ft.Text("Якісні павербанки для ваших цілей", size=24, italic=True, color="gray", text_align=ft.TextAlign.CENTER),
-                ft.Divider(height=20, color="transparent"),
+            ft.Column(
+                [
+                    ft.Text("PowerBankDzhur", size=40, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+                    ft.Text("Якісні павербанки для ваших цілей", size=24, italic=True, color="gray",
+                            text_align=ft.TextAlign.CENTER),
+                    ft.Divider(height=20, color="transparent"),
 
-            ], alignment=ft.MainAxisAlignment.START, horizontal_alignment=ft.CrossAxisAlignment.CENTER, expand=True, spacing=15)
+                    # Перший рядок - Якість
+                    ft.Row(
+                        [
+                            ft.Icon(ft.Icons.CHECK_CIRCLE, color=ft.Colors.GREEN, size=40),
+                            ft.Text("Висока якість продукції, перевірена часом", size=18),
+                        ],
+
+                        spacing=15,
+                    ),
+
+                    # Другий рядок - Швидка доставка
+                    ft.Row(
+                        [
+                            ft.Icon(ft.Icons.LOCAL_SHIPPING, color=ft.Colors.BLUE, size=40),
+                            ft.Text("Швидка доставка по всій Україні", size=18),
+                        ],
+
+                        spacing=15,
+                    ),
+
+                    # Третій рядок - Вигідна ціна
+                    ft.Row(
+                        [
+                            ft.Icon(ft.Icons.EURO_SYMBOL, color=ft.Colors.ORANGE, size=40),
+                            ft.Text("Вигідна ціна та гнучкі умови оплати", size=18),
+                        ],
+
+                        spacing=15,
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.START,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                expand=True,
+                spacing=20,
+            )
         )
         page.update()
 
@@ -44,16 +81,85 @@ def main(page: ft.Page):
         )
         page.update()
 
+    def register():
+        # Зберігаємо кожне поле в змінну
+        name_field = ft.TextField(width=400, text_align=ft.TextAlign.CENTER)
+        surname_field = ft.TextField(width=400, text_align=ft.TextAlign.CENTER)
+        email_field = ft.TextField(width=400, text_align=ft.TextAlign.CENTER)
+        phone_field = ft.TextField(width=400, text_align=ft.TextAlign.CENTER)
+
+        def show_success_message(msg_text):
+            page.snack_bar = ft.SnackBar(
+                content=ft.Text(msg_text, color="black"),
+                bgcolor="#4CAF50",  # Яскравий зелений
+                duration=3000,  # 3 секунди
+                show_close_icon=False,
+                behavior=ft.SnackBarBehavior.FLOATING
+            )
+            page.snack_bar.open = True
+            page.update()
+
+        # Обробник кнопки підтвердження
+        def on_submit(e):
+            print("Ім'я:", name_field.value)
+            print("Фамілія:", surname_field.value)
+            print("Email:", email_field.value)
+            print("Телефон:", phone_field.value)
+            # Тут можеш додати логіку валідації, відправки на сервер і т.д.
+
+            show_success_message("Успішне підтвердження!")
+
+        # Очищаємо контент
+        content.controls.clear()
+
+        # Додаємо все з полями
+        content.controls.append(
+            ft.Column([
+                ft.Text("Реєстрація", size=36, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+
+                ft.Row(
+                    controls=[ft.Icon(ft.Icons.ACCOUNT_CIRCLE, size=100)],
+                    alignment=ft.MainAxisAlignment.CENTER
+                ),
+
+                ft.Row([name_field, ft.Text("Вкажіть ім'я", width=150, text_align=ft.TextAlign.CENTER)]),
+                ft.Row([surname_field, ft.Text("Вкажіть фамілію", width=150, text_align=ft.TextAlign.CENTER)]),
+                ft.Row([email_field, ft.Text("Вкажіть email", width=150, text_align=ft.TextAlign.CENTER)]),
+                ft.Row([phone_field, ft.Text("Вкажіть номер телефону", width=150, text_align=ft.TextAlign.CENTER)]),
+
+                ft.ElevatedButton(
+                    "Підтвердити",
+                    width=150,
+                    bgcolor="#4CAF50",
+                    color=ft.Colors.BLACK,
+                    on_click=on_submit
+                )
+            ],
+                alignment=ft.MainAxisAlignment.START,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=20
+            )
+        )
+
+        page.update()
+
     def account():
         content.controls.clear()
         content.controls.append(
             ft.Column(
+
                 [
-                    ft.Icon(ft.Icons.ACCOUNT_CIRCLE, size=100),  # Іконка зверху
+                    ft.Text("Аккаунт", size=36, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+                    ft.Row(  # ось цей ряд — щоб центровано
+                        controls=[
+                            ft.Icon(ft.Icons.ACCOUNT_CIRCLE, size=100)
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER
+                    ),
                     ft.Row(
                         [
                             ft.ElevatedButton("Авторизуватись", width=150),
-                            ft.ElevatedButton("Зареєструватись", width=150),
+                            ft.ElevatedButton("Зареєструватись", width=150, on_click=lambda e: register()),
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
                         spacing=20
@@ -78,7 +184,7 @@ def main(page: ft.Page):
         spacing=10
     )
 
-    content = ft.Column(expand=True,scroll="auto")
+    content = ft.Column(expand=True, scroll="auto")
 
     page.add(nav)
     page.add(content)
@@ -87,4 +193,10 @@ def main(page: ft.Page):
     show_home()
 
 
-ft.app(target=main, view=ft.WEB_BROWSER, port=8550, host="0.0.0.0")
+ft.app(
+    target=main,
+    view=ft.WEB_BROWSER,
+    port=8550,
+    host="0.0.0.0",
+)
+
